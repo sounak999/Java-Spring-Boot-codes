@@ -1,33 +1,38 @@
 package com.mvc.restful.apis.springbootweb.controllers;
 
 import com.mvc.restful.apis.springbootweb.dto.EmployeeDTO;
+import com.mvc.restful.apis.springbootweb.entity.EmployeeEntity;
+import com.mvc.restful.apis.springbootweb.repositories.EmployeeRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/employees")
 public class EmployeeController {
-//    @GetMapping(path = "/getMessage")
-//    public String getSecretMessage() {
-//        return "This is secret message only shown in the path /getMessage";
-//    }
+
+    // Not a recommended practice: to add entity or repository to controllers (to be removed)
+    private final EmployeeRepository employeeRepository;
+
+    public EmployeeController(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     @GetMapping(path = "/{employeeId}")
-    public EmployeeDTO getEmployeeById (@PathVariable (name = "employeeId") Long id) {
-        return new EmployeeDTO(id, "Sounak", "sounak.saha@org.in", 23, LocalDate.of(2022, 8, 23), true);
+    public EmployeeEntity getEmployeeById (@PathVariable (name = "employeeId") Long id) {
+        return employeeRepository.findById(id).orElse(null);
     }
 
     @GetMapping
-    public String getEmployeeDetails (@RequestParam(required = false, name = "name") String inputName,
-                                      @RequestParam(required = false, name = "getAge") Integer age) {
-        return "Hi, " + inputName + " with age: " + age;
+    public List<EmployeeEntity> getEmployeeDetails (@RequestParam(required = false, name = "name") String inputName,
+                                                    @RequestParam(required = false, name = "getAge") Integer age) {
+        return employeeRepository.findAll();
     }
 
     @PostMapping
-    public EmployeeDTO createEmployee (@RequestBody EmployeeDTO employee) {
-        employee.setEmployeeId(100L);
-        return employee;
+    public EmployeeEntity createEmployee (@RequestBody EmployeeEntity employee) {
+        return employeeRepository.save(employee);
     }
 
     @PutMapping
