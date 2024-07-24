@@ -23,4 +23,14 @@ public class EmployeeController {
                                       @RequestParam(required = false, name = "getAge") Integer age) {
         return "Hi, " + inputName + " with age: " + age;
     }
+
+    @PostMapping
+    public String createEmployee () {
+        return "Hello from POST";
+    }
+
+    @PutMapping
+    public String updateEmployee () {
+        return "Hello from PUT";
+    }
 }
