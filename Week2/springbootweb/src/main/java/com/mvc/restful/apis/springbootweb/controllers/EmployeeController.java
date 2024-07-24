@@ -6,20 +6,21 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @RestController
+@RequestMapping(path = "/employees")
 public class EmployeeController {
 //    @GetMapping(path = "/getMessage")
 //    public String getSecretMessage() {
 //        return "This is secret message only shown in the path /getMessage";
 //    }
 
-    @GetMapping(path = "/employee/{employeeId}")
-    public EmployeeDTO getEmployeeById (@PathVariable Long employeeId) {
-        return new EmployeeDTO(employeeId, "Sounak", "sounak.saha@org.in", 23, LocalDate.of(2022, 8, 23), true);
+    @GetMapping(path = "/{employeeId}")
+    public EmployeeDTO getEmployeeById (@PathVariable (name = "employeeId") Long id) {
+        return new EmployeeDTO(id, "Sounak", "sounak.saha@org.in", 23, LocalDate.of(2022, 8, 23), true);
     }
 
-    @GetMapping(path = "/employee")
-    public String getEmployeeDetails (@RequestParam(required = false) String name,
-                                      @RequestParam(required = false) int age) {
-        return "Hi, " + name + " with age: " + age;
+    @GetMapping
+    public String getEmployeeDetails (@RequestParam(required = false, name = "name") String inputName,
+                                      @RequestParam(required = false, name = "getAge") Integer age) {
+        return "Hi, " + inputName + " with age: " + age;
     }
 }
