@@ -1,6 +1,7 @@
 package com.mvc.restful.apis.springbootweb.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mvc.restful.apis.springbootweb.annotations.EmployeeRoleValidation;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +37,8 @@ public class EmployeeDTO {
     private boolean isActive;
 
     @NotBlank(message = "Role of the Employee cannot be blank")
-    @Pattern(regexp = "^(USER|ADMIN)$", message = "role of the user can either be USER or ADMIN")
+//    @Pattern(regexp = "^(USER|ADMIN)$", message = "role of the employee can either be USER or ADMIN")
+    @EmployeeRoleValidation
     private String Role;
 
     @NotNull(message = "Salary cannot be null")
