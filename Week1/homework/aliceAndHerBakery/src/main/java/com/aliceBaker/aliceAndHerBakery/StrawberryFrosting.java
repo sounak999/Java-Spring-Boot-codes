@@ -1,14 +1,13 @@
-package com.homework.aliceAndHerBakery;
+package com.aliceBaker.aliceAndHerBakery;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 @ConditionalOnProperty(name = "cake.frosting", havingValue = "strawberry")
 public class StrawberryFrosting implements Frosting {
     @Override
-    public String getFrostingType() {
-        return "Strawberry Frosting";
+    public void getFrostingType() {
+        System.out.println("Strawberry Frosting 🍓🥶");
     }
 }
