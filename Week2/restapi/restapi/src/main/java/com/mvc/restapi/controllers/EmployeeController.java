@@ -3,6 +3,7 @@ package com.mvc.restapi.controllers;
 import com.mvc.restapi.dto.EmployeeDTO;
 import com.mvc.restapi.entities.EmployeeEntity;
 import com.mvc.restapi.repositories.EmployeeRepository;
+import com.mvc.restapi.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -13,25 +14,25 @@ import static java.time.LocalDate.*;
 @RestController
 @RequestMapping(path = "/employees")
 public class EmployeeController {
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping(path = "/{employeeId}")
-    private EmployeeEntity getEmployee(@PathVariable(name = "employeeId") Long id) {
-        return employeeRepository.findById(id).orElse(null);
+    private EmployeeDTO getEmployee(@PathVariable(name = "employeeId") Long id) {
+        return employeeService.findById(id);
     }
 
     @GetMapping
-    private List<EmployeeEntity> getAllEmployees() {
-        return employeeRepository.findAll();
+    private List<EmployeeDTO> getAllEmployees() {
+        return employeeService.findAll();
     }
 
     @PostMapping
-    private EmployeeEntity createNewEmployee(@RequestBody EmployeeEntity employeeEntity) {
-        return employeeRepository.save(employeeEntity);
+    private EmployeeDTO createNewEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        return employeeService.save(employeeDTO);
     }
 
     @PutMapping
