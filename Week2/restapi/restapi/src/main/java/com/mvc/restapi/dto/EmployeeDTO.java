@@ -17,5 +17,5 @@ public class EmployeeDTO {
     private String email;
     private Integer age;
     private LocalDate DateOfJoining;
-    private boolean isActive;
+    private Boolean isActive;
 }
