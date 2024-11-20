@@ -5,9 +5,11 @@ import com.mvc.restapi.entities.EmployeeEntity;
 import com.mvc.restapi.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.data.util.ReflectionUtils;
 
-import java.time.LocalDate;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,5 +39,39 @@ public class EmployeeService {
         EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
         return modelMapper.map(savedEmployeeEntity, EmployeeDTO.class);
+    }
+
+    public EmployeeDTO update(Long id, EmployeeDTO employeeDTO) {
+        EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
+        employeeEntity.setId(id);
+        EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
+        return modelMapper.map(savedEmployeeEntity, EmployeeDTO.class);
+    }
+
+    public EmployeeDTO partialUpdate(Map<String, Object> updates, Long id) {
+        boolean isExist = isEmployeeExist(id);
+        if (!isExist) return null;
+
+        EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
+
+        updates.forEach((field, value) -> {
+            Field fieldToUpdate = ReflectionUtils.findRequiredField(EmployeeEntity.class, field);
+            fieldToUpdate.setAccessible(true);
+            ReflectionUtils.setField(fieldToUpdate, employeeEntity, value);
+        });
+
+        EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
+        return modelMapper.map(savedEmployeeEntity, EmployeeDTO.class);
+    }
+
+    public boolean delete(Long id) {
+        boolean isExist = isEmployeeExist(id);
+        if (!isExist) return false;
+        employeeRepository.deleteById(id);
+        return true;
+    }
+
+    private boolean isEmployeeExist(Long id) {
+        return employeeRepository.existsById(id);
     }
 }
