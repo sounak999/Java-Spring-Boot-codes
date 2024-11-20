@@ -2,6 +2,7 @@ package com.mvc.restapi.controllers;
 
 import com.mvc.restapi.dto.EmployeeDTO;
 import com.mvc.restapi.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/{employeeId}")
-    private ResponseEntity<EmployeeDTO> getEmployee(@PathVariable(name = "employeeId") Long id) {
+    private ResponseEntity<EmployeeDTO> getEmployee(@PathVariable(name = "employeeId") @Valid Long id) {
         Optional<EmployeeDTO> employeeDTO = employeeService.findById(id);
         return employeeDTO
                 .map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1))
@@ -35,12 +36,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    private ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    private ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody @Valid EmployeeDTO employeeDTO) {
         return new ResponseEntity<>(employeeService.save(employeeDTO), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/{employeeId}")
-    private EmployeeDTO updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable(name = "employeeId") Long id) {
+    private EmployeeDTO updateEmployee(@RequestBody @Valid EmployeeDTO employeeDTO, @PathVariable(name = "employeeId") Long id) {
         return employeeService.update(id, employeeDTO);
     }
 
