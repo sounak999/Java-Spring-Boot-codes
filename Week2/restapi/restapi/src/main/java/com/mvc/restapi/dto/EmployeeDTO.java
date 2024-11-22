@@ -1,5 +1,6 @@
 package com.mvc.restapi.dto;
 
+import com.mvc.restapi.annotations.EmployeeRoleValidation;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class EmployeeDTO {
     private Boolean isActive;
 
     @NotBlank
-    @Pattern(regexp = "^(USER|ADMIN)$", message = "Employee role should either be USER or ADMIN")
+//    @Pattern(regexp = "^(USER|ADMIN)$", message = "Employee role should either be USER or ADMIN")
+    @EmployeeRoleValidation
     private String role;
 }
