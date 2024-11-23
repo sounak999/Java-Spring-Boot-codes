@@ -2,6 +2,7 @@ package com.mvc.restapi.services;
 
 import com.mvc.restapi.dto.EmployeeDTO;
 import com.mvc.restapi.entities.EmployeeEntity;
+import com.mvc.restapi.exceptions.ResourceNotFoundException;
 import com.mvc.restapi.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.data.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,7 @@ public class EmployeeService {
     }
 
     public EmployeeDTO update(Long id, EmployeeDTO employeeDTO) {
+        isEmployeeExist(id);
         EmployeeEntity employeeEntity = modelMapper.map(employeeDTO, EmployeeEntity.class);
         employeeEntity.setId(id);
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
@@ -51,8 +54,7 @@ public class EmployeeService {
     }
 
     public EmployeeDTO partialUpdate(Map<String, Object> updates, Long id) {
-        boolean isExist = isEmployeeExist(id);
-        if (!isExist) return null;
+        isEmployeeExist(id);
 
         EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
 
@@ -67,13 +69,13 @@ public class EmployeeService {
     }
 
     public boolean delete(Long id) {
-        boolean isExist = isEmployeeExist(id);
-        if (!isExist) return false;
+        isEmployeeExist(id);
         employeeRepository.deleteById(id);
         return true;
     }
 
-    private boolean isEmployeeExist(Long id) {
-        return employeeRepository.existsById(id);
+    private void isEmployeeExist(Long id) {
+        boolean isExist = employeeRepository.existsById(id);
+        if (!isExist) throw new ResourceNotFoundException("Employee does not exist with id: " + id);
     }
 }
